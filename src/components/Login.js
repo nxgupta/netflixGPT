@@ -1,10 +1,27 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import Header from "./Header";
+import { validateData } from "../utility/validations";
 
 const Login = () => {
   let [isSignInForm, setIsSignInForm] = useState(true);
+  let [errorMessage, setErrorMessage] = useState(true);
+  const email = useRef(null);
+  const password = useRef(null);
+  const name = useRef(null);
   const toggleSignInForm = () => {
     setIsSignInForm(!isSignInForm);
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log("name", name?.current?.value);
+    let msg = validateData(
+      name?.current?.value,
+      email.current.value,
+      password.current.value,
+      !isSignInForm
+    );
+    setErrorMessage(msg);
   };
   return (
     <div>
@@ -21,6 +38,7 @@ const Login = () => {
         </h3>
         {!isSignInForm ? (
           <input
+            ref={name}
             type="name"
             name="name"
             placeholder="Full Name"
@@ -28,18 +46,24 @@ const Login = () => {
           />
         ) : null}
         <input
+          ref={email}
           type="email"
           name="email"
           placeholder="Email or Phone number"
           className="my-4 p-4 w-full  bg-gray-700 rounded"
         />
         <input
+          ref={password}
           type="password"
           name="email"
           placeholder="Password"
           className="my-4 p-4 w-full bg-gray-700 rounded"
         />
-        <button className="p-4 my-4 w-full bg-red-700 rounded">
+        <p className="font-bold text-red-500">{errorMessage}</p>
+        <button
+          className="p-4 my-4 w-full bg-red-700 rounded"
+          onClick={(e) => handleSubmit(e)}
+        >
           {isSignInForm ? "Sign In" : "Sign Up"}
         </button>
         <h5 className="font-bold cursor-pointer" onClick={toggleSignInForm}>
