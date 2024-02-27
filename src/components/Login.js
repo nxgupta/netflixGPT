@@ -1,73 +1,122 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import Header from "./Header";
 import { validateData } from "../utility/validations";
+import { apiCall, showAlert } from "../utility/helpers";
+import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { addUser } from "../store/userSlice";
 
 const Login = () => {
-  let [isSignInForm, setIsSignInForm] = useState(true);
-  let [errorMessage, setErrorMessage] = useState(true);
-  const email = useRef(null);
-  const password = useRef(null);
-  const name = useRef(null);
-  const toggleSignInForm = () => {
-    setIsSignInForm(!isSignInForm);
+  let dispatch = useDispatch();
+  let initialState = {
+    name: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
   };
-
-  const handleSubmit = (e) => {
+  let navigate = useNavigate();
+  let [isLogin, setIsLogin] = useState(true);
+  let [userData, setUserData] = useState(initialState);
+  const toggleLogin = () => {
+    setIsLogin(!isLogin);
+    setUserData(initialState);
+  };
+  const handleChange = ({ target }) => {
+    setUserData({ ...userData, [target.name]: target.value });
+  };
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("name", name?.current?.value);
-    let msg = validateData(
-      name?.current?.value,
-      email.current.value,
-      password.current.value,
-      !isSignInForm
-    );
-    setErrorMessage(msg);
+    let msg = validateData({ ...userData, isLogin });
+    if (msg == null) {
+      let uri = `/api/${isLogin ? "login" : "signup"}`;
+      let resp = await apiCall(uri, "post", userData);
+      resp = resp.data;
+      if (resp) {
+        setUserData(initialState);
+        showAlert({
+          type: "success",
+          msg: resp.msg,
+        });
+        if (!isLogin) setIsLogin(true);
+        else {
+          dispatch(addUser({ userId: resp.uId }));
+          navigate("/browse");
+        }
+      } else {
+        showAlert({
+          type: "error",
+          msg: resp.msg,
+        });
+      }
+    } else {
+      showAlert({ type: "error", msg });
+    }
   };
   return (
     <div>
       <Header />
       <div className="absolute">
-        <img
-          src="https://assets.nflxext.com/ffe/siteui/vlv3/c0b69670-89a3-48ca-877f-45ba7a60c16f/2642e08e-4202-490e-8e93-aff04881ee8a/IN-en-20240212-popsignuptwoweeks-perspective_alpha_website_small.jpg"
-          alt="background"
-        />
+        <div className="max-w-full h-screen">
+          <img
+            className="object-cover "
+            src="https://assets.nflxext.com/ffe/siteui/vlv3/c0b69670-89a3-48ca-877f-45ba7a60c16f/2642e08e-4202-490e-8e93-aff04881ee8a/IN-en-20240212-popsignuptwoweeks-perspective_alpha_website_small.jpg"
+            alt="background"
+          />
+        </div>
       </div>
-      <form className="absolute p-12 bg-black w-3/12 mx-auto my-36 right-0 left-0 text-white rounded opacity-85">
-        <h3 className="font-bold text-3xl py-4">
-          {isSignInForm ? "Sign In" : "Sign Up"}
+      <form className="absolute p-12 bg-black w-4/12 mx-auto my-32 right-0 left-0 text-white rounded bg-opacity-85">
+        <h3 className="font-bold text-3xl py-2">
+          {isLogin ? "Sign In" : "Sign Up"}
         </h3>
-        {!isSignInForm ? (
+        {!isLogin ? (
           <input
-            ref={name}
+            value={userData.name}
             type="name"
             name="name"
             placeholder="Full Name"
+            onChange={(e) => handleChange(e)}
             className="my-4 p-4 w-full  bg-gray-700 rounded"
           />
         ) : null}
         <input
-          ref={email}
+          value={userData.email}
           type="email"
           name="email"
           placeholder="Email or Phone number"
+          onChange={(e) => handleChange(e)}
           className="my-4 p-4 w-full  bg-gray-700 rounded"
         />
         <input
-          ref={password}
+          value={userData.password}
           type="password"
-          name="email"
+          name="password"
           placeholder="Password"
+          onChange={(e) => handleChange(e)}
           className="my-4 p-4 w-full bg-gray-700 rounded"
         />
-        <p className="font-bold text-red-500">{errorMessage}</p>
+        {!isLogin ? (
+          <input
+            value={userData.confirmPassword}
+            type="password"
+            name="confirmPassword"
+            placeholder="Confirm Password"
+            onChange={(e) => handleChange(e)}
+            className="my-4 p-4 w-full bg-gray-700 rounded"
+          />
+        ) : null}
         <button
           className="p-4 my-4 w-full bg-red-700 rounded"
-          onClick={(e) => handleSubmit(e)}
+          onClick={(e) => {
+            handleSubmit(e);
+          }}
         >
-          {isSignInForm ? "Sign In" : "Sign Up"}
+          {isLogin ? "Sign In" : "Sign Up"}
         </button>
-        <h5 className="font-bold cursor-pointer" onClick={toggleSignInForm}>
-          {isSignInForm
+        <h5
+          className="font-bold cursor-pointer text-center"
+          onClick={toggleLogin}
+        >
+          {isLogin
             ? "New to netflix? Sign Up Now"
             : "Already a User? Sign in now!"}
         </h5>
