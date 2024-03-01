@@ -5,6 +5,7 @@ import { apiCall, showAlert } from "../utility/helpers";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { addUser } from "../store/userSlice";
+import { USER_AVATAR } from "../utility/contants";
 
 const Login = () => {
   let dispatch = useDispatch();
@@ -57,11 +58,7 @@ const Login = () => {
       <Header />
       <div className="absolute">
         <div className="max-w-full h-screen">
-          <img
-            className="object-cover "
-            src="https://assets.nflxext.com/ffe/siteui/vlv3/c0b69670-89a3-48ca-877f-45ba7a60c16f/2642e08e-4202-490e-8e93-aff04881ee8a/IN-en-20240212-popsignuptwoweeks-perspective_alpha_website_small.jpg"
-            alt="background"
-          />
+          <img className="object-cover " src={USER_AVATAR} alt="background" />
         </div>
       </div>
       <form className="absolute p-12 bg-black w-4/12 mx-auto my-32 right-0 left-0 text-white rounded bg-opacity-85">

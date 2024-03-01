@@ -10,9 +10,8 @@ const Header = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   let [userId, setUserId] = useState(
-    useSelector((state) => state?.user?.userId)
+    useSelector((store) => store.user?.userId)
   );
-  console.log(userId);
   const logoutUser = async () => {
     try {
       await apiCall("http://localhost:8088/api/logout", "get");
@@ -29,6 +28,7 @@ const Header = () => {
         const { uId } = await getStatus();
         if (uId) {
           dispatch(addUser({ userId: uId }));
+          setUserId(uId);
           navigate("/browse");
         } else {
           dispatch(removeUser());
@@ -40,7 +40,7 @@ const Header = () => {
     };
 
     if (!userId) checkUserStatus();
-  }, []); // Add dispatch and navigate to the dependency array
+  }, []);
 
   return (
     <div className="absolute px-8 h-16 w-full py-2 bg-gradient-to-b from-black z-10 flex flex-row justify-between">
