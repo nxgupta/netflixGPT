@@ -6,7 +6,7 @@ import axios from "axios";
 
 export let useNowPlayingMovies = () => {
   let dispatch = useDispatch();
-  let userId = useSelector((state) => state?.user?.userId);
+  let userId = useSelector((state) => state?.user?.user?.userId);
   const getNowPlayingMovies = async () => {
     let response = await axios.get(
       "https://api.themoviedb.org/3/movie/now_playing?language=en-US&page=1",

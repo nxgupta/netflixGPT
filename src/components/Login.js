@@ -30,7 +30,7 @@ const Login = () => {
     let msg = validateData({ ...userData, isLogin });
     if (msg == null) {
       let uri = `/api/${isLogin ? "login" : "signup"}`;
-      let resp = await apiCall(uri, "post", userData);
+      let resp = await apiCall(uri, "POST", userData);
       resp = resp.data;
       if (resp) {
         setUserData(initialState);
@@ -38,9 +38,10 @@ const Login = () => {
           type: "success",
           msg: resp.msg,
         });
-        if (!isLogin) setIsLogin(true);
-        else {
-          dispatch(addUser({ userId: resp.uId }));
+        if (!isLogin) {
+          setIsLogin(true);
+        } else {
+          dispatch(addUser(resp.uId));
           navigate("/browse");
         }
       } else {

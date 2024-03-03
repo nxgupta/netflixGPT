@@ -32,11 +32,11 @@ export let apiCall = (uri, type, payload) => {
     credentials: "include",
   });
   switch (type) {
-    case "get":
+    case "GET":
       return instance.get(uri);
-    case "post":
+    case "POST":
       return instance.post(uri, payload);
-    case "delete":
+    case "DELETE":
       break;
 
     default:
@@ -45,6 +45,6 @@ export let apiCall = (uri, type, payload) => {
 };
 
 export let getStatus = async () => {
-  let resp = await apiCall("/api/getCurrentUser", "get");
+  let resp = await apiCall("/api/getCurrentUser", "GET");
   return resp.data;
 };
