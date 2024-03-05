@@ -35,6 +35,7 @@ export let apiCall = (uri, type, payload) => {
     case "GET":
       return instance.get(uri);
     case "POST":
+      if (uri === "/api/chatWithGpt" && process.env.GPT_LIMIT === 0) return;
       return instance.post(uri, payload);
     case "DELETE":
       break;

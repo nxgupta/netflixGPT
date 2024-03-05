@@ -3,8 +3,7 @@ export const USER_AVATAR =
 export const API_OPTIONS = {
   headers: {
     accept: "application/json",
-    Authorization:
-      "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJmODI4N2Y1ZjZlYjAzOWY1OWI0ZWUyODg5ZmNiMmVlMiIsInN1YiI6IjY1ZTAwMjY2NTI5NGU3MDE0YTRlNDk0MSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.q1WsbyGNsKvvYPD2ZmD82bqMay63vcFSLh0bNt_bofc",
+    Authorization: "Bearer " + process.env.REACT_APP_TMDB_TOKEN,
   },
 };
 export const imgPath = "https://image.tmdb.org/t/p/w500";
