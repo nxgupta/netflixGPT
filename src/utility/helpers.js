@@ -39,7 +39,6 @@ export let apiCall = (uri, type, payload) => {
       return instance.post(uri, payload);
     case "DELETE":
       break;
-
     default:
       break;
   }

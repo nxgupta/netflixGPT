@@ -15,7 +15,11 @@ const GptSearchBar = () => {
     if (resp.data.success) {
       dispatch(saveGptResult(movieArray));
       dispatch(saveGptQuery(gptQuery));
-    } else showAlert({ type: "error", msg: resp.msg });
+    } else
+      showAlert({
+        type: "error",
+        msg: resp.msg || "Something went wrong, Please try again",
+      });
   };
 
   const handleChange = (e) => {
